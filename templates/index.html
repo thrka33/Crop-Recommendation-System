@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Smart Crop Recommendation System</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <header class="header">
+        <div class="logo">🌱 CropWise</div>
+
+        <nav>
+            <a href="#home">Home</a>
+            <a href="#recommendation">Recommendation</a>
+            <a href="#about">About</a>
+        </nav>
+    </header>
+
+    <!-- HOME SECTION -->
+    <section class="hero" id="home">
+
+        <div class="hero-content">
+
+            <h1>Smart Crop Recommendation System</h1>
+
+            <p>
+                Discover the most suitable crop for your soil and weather
+                conditions using Machine Learning.
+            </p>
+
+            <a href="#recommendation" class="hero-button">
+                Get Crop Recommendation
+            </a>
+
+        </div>
+
+    </section>
+
+    <!-- RECOMMENDATION SECTION -->
+    <section class="recommendation-section" id="recommendation">
+
+        <div class="section-heading">
+
+            <h2>Crop Recommendation</h2>
+
+            <p>
+                Enter your soil and environmental parameters
+                to identify the suitable crop.
+            </p>
+
+        </div>
+
+        <form method="POST" action="/" class="form-container">
+
+            <div class="input-grid">
+
+                <div class="input-group">
+                    <label for="nitrogen">Nitrogen (N)</label>
+
+                    <input type="number"
+                           id="nitrogen"
+                           name="nitrogen"
+                           step="any"
+                           min="0"
+                           required
+                           value="{{ input_values.get('nitrogen', '') }}"
+                           placeholder="Enter nitrogen value">
+                </div>
+
+                <div class="input-group">
+                    <label for="phosphorus">Phosphorus (P)</label>
+
+                    <input type="number"
+                           id="phosphorus"
+                           name="phosphorus"
+                           step="any"
+                           min="0"
+                           required
+                           value="{{ input_values.get('phosphorus', '') }}"
+                           placeholder="Enter phosphorus value">
+                </div>
+
+                <div class="input-group">
+                    <label for="potassium">Potassium (K)</label>
+
+                    <input type="number"
+                           id="potassium"
+                           name="potassium"
+                           step="any"
+                           min="0"
+                           required
+                           value="{{ input_values.get('potassium', '') }}"
+                           placeholder="Enter potassium value">
+                </div>
+
+                <div class="input-group">
+                    <label for="temperature">Temperature (°C)</label>
+
+                    <input type="number"
+                           id="temperature"
+                           name="temperature"
+                           step="any"
+                           required
+                           value="{{ input_values.get('temperature', '') }}"
+                           placeholder="Enter temperature">
+                </div>
+
+                <div class="input-group">
+                    <label for="humidity">Humidity (%)</label>
+
+                    <input type="number"
+                           id="humidity"
+                           name="humidity"
+                           step="any"
+                           min="0"
+                           max="100"
+                           required
+                           value="{{ input_values.get('humidity', '') }}"
+                           placeholder="Enter humidity">
+                </div>
+
+                <div class="input-group">
+                    <label for="ph">Soil pH</label>
+
+                    <input type="number"
+                           id="ph"
+                           name="ph"
+                           step="any"
+                           min="0"
+                           max="14"
+                           required
+                           value="{{ input_values.get('ph', '') }}"
+                           placeholder="Enter soil pH">
+                </div>
+
+                <div class="input-group">
+                    <label for="rainfall">Rainfall (mm)</label>
+
+                    <input type="number"
+                           id="rainfall"
+                           name="rainfall"
+                           step="any"
+                           min="0"
+                           required
+                           value="{{ input_values.get('rainfall', '') }}"
+                           placeholder="Enter rainfall">
+                </div>
+
+            </div>
+
+            <!-- ALGORITHM SELECTION -->
+            <div class="algorithm-selection">
+
+                <label for="algorithm">
+                    Select Machine Learning Algorithm
+                </label>
+
+                <select id="algorithm" name="algorithm" required>
+
+                    <option value="MLP"
+                        {% if selected_algorithm == 'MLP' %}
+                            selected
+                        {% endif %}>
+                        Multi-Layer Perceptron (MLP)
+                    </option>
+
+                    <option value="KNN"
+                        {% if selected_algorithm == 'KNN' %}
+                            selected
+                        {% endif %}>
+                        K-Nearest Neighbors (KNN)
+                    </option>
+
+                </select>
+
+            </div>
+
+            <!-- SUBMIT BUTTON -->
+            <button type="submit" class="recommend-button">
+                🌾 Recommend Crop
+            </button>
+
+        </form>
+
+        <!-- PREDICTION RESULT -->
+        {% if prediction %}
+
+        <div class="result-card">
+
+            <h2>🌱 Crop Recommendation Result</h2>
+
+            <p class="result-text">
+                Based on the provided soil and weather parameters,
+                the recommended crop is:
+            </p>
+
+            <div class="crop-name">
+                {{ prediction | title }}
+            </div>
+
+            <p class="algorithm-text">
+                Prediction generated using
+                <strong>{{ selected_algorithm }}</strong>
+                Machine Learning Algorithm.
+            </p>
+
+        </div>
+
+        {% endif %}
+
+        <!-- ERROR MESSAGE -->
+        {% if error %}
+
+        <div class="error-message">
+            {{ error }}
+        </div>
+
+        {% endif %}
+
+    </section>
+
+    <!-- ABOUT SECTION -->
+    <section class="about-section" id="about">
+
+        <h2>About the Project</h2>
+
+        <p>
+            This project uses Machine Learning algorithms to recommend
+            suitable crops based on soil nutrient levels and weather
+            conditions. The system implements Multi-Layer Perceptron
+            (MLP) and K-Nearest Neighbors (KNN) algorithms to
+            classify the optimal crop for the given agricultural parameters.
+        </p>
+
+        <div class="algorithm-cards">
+
+            <div class="algorithm-card">
+                <h3>🧠 MLP</h3>
+
+                <p>
+                    Multi-Layer Perceptron is an artificial neural
+                    network that learns complex relationships between
+                    input parameters and crop categories.
+                </p>
+            </div>
+
+            <div class="algorithm-card">
+                <h3>📊 KNN</h3>
+
+                <p>
+                    K-Nearest Neighbors identifies similar agricultural
+                    data samples and predicts the crop based on
+                    neighboring observations.
+                </p>
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+
+        <p>
+            CropWise | Machine Learning Based Crop Recommendation System
+        </p>
+
+        <p>
+            MLP & KNN Algorithms
+        </p>
+
+    </footer>
+
+</body>
+</html>
